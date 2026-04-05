@@ -1,43 +1,28 @@
-import React from "react";
-import { View as RNView, ViewProps, StyleSheet } from "react-native";
-import { theme, ThemeBackgroundKey } from "@theme";
+import { theme } from '@/theme';
+import React from 'react';
+import { StyleProp, ViewProps, View as ViewRN, ViewStyle } from 'react-native';
+import { viewStylesVariant } from './View';
 
-type FlexVariant = "row" | "column" | "center";
+export type ViewProp = ViewProps & {
+   children?: React.ReactNode;
+   style?: StyleProp<ViewStyle>;
+   variant?: keyof typeof viewStylesVariant;
+   backgroundColor?: keyof typeof theme.background;
+   flex?: number;
+};
 
-interface Props extends ViewProps {
-  variant?: FlexVariant;
-  flex?: number;
-  backgroundColor?: ThemeBackgroundKey;
-  children?: React.ReactNode;
-}
+const Flex = ({ children, style, variant, flex, ...rest }: ViewProp) => {
+   return (
+      <ViewRN
+         style={[viewStylesVariant[variant || 'column'], style, {
+            flex: flex ?? 1,
+         }]}
+         {...rest}
+      >
+         {children && children}
+      </ViewRN>
+   );
+};
 
-export function Flex({ variant = "column", flex = 1, backgroundColor, style, children, ...rest }: Props) {
-  const bg = backgroundColor ? theme.background[backgroundColor] : undefined;
 
-  return (
-    <RNView
-      style={[styles.base, styles[variant], { flex }, bg ? { backgroundColor: bg } : undefined, style]}
-      {...rest}
-    >
-      {children}
-    </RNView>
-  );
-}
-
-const styles = StyleSheet.create({
-  base: {
-    gap: 12,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  column: {
-    flexDirection: "column",
-  },
-  center: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default Flex;

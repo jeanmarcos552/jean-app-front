@@ -3,19 +3,14 @@ import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { Layout } from "@components/ui/Layout";
 import { Card } from "@components/ui/Card";
-import { Text } from "@components/ui/Text";
-import { View } from "@components/ui/View";
 import { Button } from "@components/ui/Buttons";
 import { useAuth } from "@/contexts/authContexts";
 import { useGoals } from "@/queries/useGoals";
 import { Goal } from "@/types/goal";
 import { money } from "@/helper/Mask";
 import { formatDate } from "@/helper/date-format";
-
-type SectionItem =
-  | { key: "header" }
-  | { key: "goals"; data: Goal[] }
-  | { key: "empty" };
+import View from "@/components/ui/View";
+import Text from "@/components/ui/Text";
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -38,21 +33,21 @@ export default function HomeScreen() {
     ({ item }: { item: any }) => {
       if (item.key === "header") {
         return (
-          <View variant="row" style={styles.headerRow}>
-            <View style={styles.headerText}>
-              <Text type="titulo">
+          <Card.Root variant="black">
+            <Card.Header>
+              <Card.Title after="Suas metas colaborativas">
                 Ola, {user?.name?.split(" ")[0]}
-              </Text>
-              <Text type="subtitulo">Suas metas colaborativas</Text>
-            </View>
-            <Button
-              variant="default"
-              size="small"
-              onPress={() => router.push("/goals/criar")}
-            >
-              + Nova Meta
-            </Button>
-          </View>
+              </Card.Title>
+              <View>
+                <Button
+                  size="small"
+                  onPress={() => router.push("/goals/criar")}
+                >
+                  + Nova Meta
+                </Button>
+              </View>
+            </Card.Header>
+          </Card.Root>
         );
       }
 
@@ -89,14 +84,18 @@ export default function HomeScreen() {
                 - Ate {formatDate(goal.end_date)}
               </Card.Label>
             </View>
-            <Card.Badge color={goal.status === "active" ? "success" : "gray"}>
-              {goal.status === "active" ? "Ativa" : goal.status === "completed" ? "Concluida" : "Cancelada"}
+            <Card.Badge variant={goal.status === "active" ? "success" : "gray"}>
+              {goal.status === "active"
+                ? "Ativa"
+                : goal.status === "completed"
+                  ? "Concluida"
+                  : "Cancelada"}
             </Card.Badge>
           </Card.Header>
         </Card.Press>
       );
     },
-    [goals, user]
+    [goals, user],
   );
 
   if (isLoading) {
@@ -111,7 +110,6 @@ export default function HomeScreen() {
     <Layout.Root>
       <Layout.SectionList
         sections={sections}
-        keyExtractor={(item: any) => item.key}
         renderItem={renderItem}
         renderSectionHeader={() => null}
         refreshing={isLoading}

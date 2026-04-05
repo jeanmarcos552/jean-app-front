@@ -1,157 +1,198 @@
-import React, { useState } from "react";
+import { Colors } from "@/constants/theme";
+import { BackgroundType, ColorsType, theme } from "@/theme";
+import React from "react";
 import {
-  TouchableOpacity,
   ActivityIndicator,
+  LayoutRectangle,
+  StyleProp,
   StyleSheet,
-  LayoutChangeEvent,
-  ViewStyle,
-  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
 } from "react-native";
-import { theme } from "@theme";
-import { Text } from "../Text";
-import { View } from "../View";
+import { Card } from "../Card";
+import Text from "../Text";
+import View from "../View";
+import {
+  sizeStyles,
+  sizeTextStyles,
+  styles,
+  stylesBackground,
+  stylesText,
+} from "./buttons.style";
 
-type ButtonVariant = "default" | "outline" | "success" | "link" | "dark";
-type ButtonSize = "small" | "medium" | "large" | "link";
-
-interface ButtonProps {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+export type ButtonProps = TouchableOpacityProps & {
+  children?: React.ReactNode;
+  style?: StyleProp<TouchableOpacityProps>;
+  variant?: keyof typeof stylesBackground;
+  color?: ColorsType;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
   isLoading?: boolean;
+  disabledLoading?: boolean;
+  size?: "small" | "medium" | "large" | "link";
   label?: string;
-  color?: string;
-  disabled?: boolean;
-  onPress?: () => void;
-  children?: React.ReactNode;
-  style?: ViewStyle;
-}
+};
 
-export function Button({
-  variant = "default",
-  size = "medium",
-  iconLeft,
-  iconRight,
-  isLoading = false,
-  label,
-  color,
-  disabled = false,
-  onPress,
-  children,
-  style,
-}: ButtonProps) {
-  const [width, setWidth] = useState<number | undefined>(undefined);
-
-  const handleLayout = (e: LayoutChangeEvent) => {
-    if (!width) {
-      setWidth(e.nativeEvent.layout.width);
-    }
-  };
-
-  const variantStyle = variantStyles[variant];
-  const sizeStyle = sizeStyles[size];
-  const isDisabled = disabled || isLoading;
-
-  const textColor = color || variantStyle.textColor;
-
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={isDisabled}
-      activeOpacity={0.7}
-      onLayout={handleLayout}
-      style={[
-        styles.base,
-        variantStyle.container,
-        sizeStyle,
-        isDisabled && styles.disabled,
-        width && isLoading ? { width } : undefined,
-        style,
-      ]}
-    >
-      {isLoading ? (
-        <ActivityIndicator color={textColor} size="small" />
-      ) : (
-        <View variant="row" style={styles.content}>
-          {iconLeft}
-          <Text style={[styles.text, sizeTextStyles[size], { color: textColor }]}>
-            {label || children}
-          </Text>
-          {iconRight}
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-}
-
-const styles = StyleSheet.create({
-  base: {
-    borderRadius: 10,
+const stylesBotao = StyleSheet.create({
+  button: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  content: {
     gap: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontFamily: theme.fonts.titulo,
-    fontWeight: "600",
-  },
-  disabled: {
-    opacity: 0.5,
   },
 });
 
-const variantStyles: Record<ButtonVariant, { container: ViewStyle; textColor: string }> = {
-  default: {
-    container: {
-      backgroundColor: theme.colors.secundary,
-    },
-    textColor: "#fff",
-  },
-  outline: {
-    container: {
-      backgroundColor: "transparent",
-      borderWidth: 1,
-      borderColor: theme.border.gray,
-    },
-    textColor: theme.colors.white,
-  },
-  success: {
-    container: {
-      backgroundColor: theme.colors.success,
-    },
-    textColor: "#fff",
-  },
-  link: {
-    container: {
-      backgroundColor: "transparent",
-    },
-    textColor: theme.colors.secundary,
-  },
-  dark: {
-    container: {
-      backgroundColor: theme.background.black,
-      borderWidth: 1,
-      borderColor: theme.border.black,
-    },
-    textColor: theme.colors.white,
-  },
+type RenderChildrenProps = {
+  children: React.ReactNode;
+  variant: keyof typeof stylesBackground;
+  size: Exclude<ButtonProps["size"], undefined>;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
+  colorIconVariante: { [key in keyof typeof stylesBackground]: BackgroundType };
+  onLayout: (event: { nativeEvent: { layout: LayoutRectangle } }) => void;
+  color?: ColorsType;
 };
 
-const sizeStyles: Record<ButtonSize, ViewStyle> = {
-  small: { paddingVertical: 8, paddingHorizontal: 16 },
-  medium: { paddingVertical: 12, paddingHorizontal: 20 },
-  large: { paddingVertical: 16, paddingHorizontal: 24 },
-  link: { paddingVertical: 4, paddingHorizontal: 0 },
-};
+function RenderChildren({
+  children,
+  variant,
+  size,
+  iconLeft,
+  iconRight,
+  colorIconVariante,
+  onLayout,
+  color,
+}: RenderChildrenProps) {
+  return (
+    <View onLayout={onLayout} style={stylesBotao.button}>
+      {iconLeft && (
+        <Card.Icon
+          variant={colorIconVariante[variant]}
+          size="small"
+          style={styles.iconContainer}
+        >
+          {iconLeft}
+        </Card.Icon>
+      )}
+      {typeof children === "string" ? (
+        <Text
+          style={[
+            stylesText[variant],
+            sizeTextStyles[size],
+            color !== undefined && { color: theme.colors[color] },
+          ]}
+        >
+          {children}
+        </Text>
+      ) : (
+        (children ?? children)
+      )}
+      {iconRight && (
+        <Card.Icon
+          variant={colorIconVariante[variant]}
+          size="small"
+          style={styles.iconContainer}
+        >
+          {iconRight}
+        </Card.Icon>
+      )}
+    </View>
+  );
+}
 
-const sizeTextStyles: Record<ButtonSize, TextStyle> = {
-  small: { fontSize: 12 },
-  medium: { fontSize: 14 },
-  large: { fontSize: 16 },
-  link: { fontSize: 14, textDecorationLine: "underline" },
+export const Button = ({
+  variant = "default",
+  color,
+  children,
+  style,
+  iconLeft,
+  iconRight,
+  isLoading,
+  size = "medium",
+  disabledLoading = false,
+  label,
+  ...props
+}: ButtonProps) => {
+  const [loading, setLoading] = React.useState(isLoading || false);
+  const [widthDefault, setWidthDefault] =
+    React.useState<LayoutRectangle | null>(null);
+
+  const sizeLoading = {
+    small: 10,
+    medium: 19,
+    large: 19,
+    link: 0,
+  };
+
+  const colorIconVariante: {
+    [key in keyof typeof stylesBackground]: BackgroundType;
+  } = {
+    default: "danger",
+    outline: "primary",
+    success: "success",
+    link: "secundary",
+    dark: "white",
+  };
+  return (
+    <>
+      {label && (
+        <Text style={{ textAlign: "center", fontSize: 10.5 }} color="white">
+          {label}
+        </Text>
+      )}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPressIn={() => {
+          if (disabledLoading) {
+            return;
+          }
+          if (isLoading) {
+            setLoading(isLoading);
+            return;
+          }
+
+          setLoading(true);
+        }}
+        onPressOut={() => {
+          setLoading(isLoading || false);
+        }}
+        disabled={(loading || isLoading) && props.disabled}
+        style={[
+          stylesBackground[variant],
+          sizeStyles[size],
+          styles.button,
+          {
+            opacity: props.disabled ? 0.5 : 1,
+          },
+          style,
+        ]}
+        {...props}
+      >
+        {loading || isLoading ? (
+          <View
+            style={[
+              styles.loading,
+              { width: widthDefault?.width, height: widthDefault?.height },
+            ]}
+          >
+            <ActivityIndicator
+              size={sizeLoading[size]}
+              color={color ? Colors[color] : stylesText[variant].color}
+            />
+          </View>
+        ) : (
+          <RenderChildren
+            variant={variant}
+            size={size}
+            iconLeft={iconLeft}
+            iconRight={iconRight}
+            colorIconVariante={colorIconVariante}
+            onLayout={({ nativeEvent }) => setWidthDefault(nativeEvent.layout)}
+            color={color}
+          >
+            {children}
+          </RenderChildren>
+        )}
+      </TouchableOpacity>
+    </>
+  );
 };

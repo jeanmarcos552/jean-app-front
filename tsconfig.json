@@ -2,25 +2,19 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./src",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@images/*": [
-        "../assets/images/*"
-      ],
-      "@theme": [
-        "./theme/index.ts"
-      ],
-      "@components/*": [
-        "./components/*"
-      ]
+      "@/*": ["./*"],
+      "@images/*": ["../assets/images/*"],
+      "@theme": ["./theme/index.ts"],
+      "@components/*": ["./components/*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.d.ts",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]

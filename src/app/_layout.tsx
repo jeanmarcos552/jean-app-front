@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/authContexts";
 import { useCustomFonts } from "@/hooks/use-custom-fonts";
 import { configureGoogleSignIn } from "@/services/google-signin.service";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,32 +20,42 @@ const queryClient = new QueryClient({
 });
 
 export default function Layout() {
-  const { loaded } = useCustomFonts();
+  const { loaded, error } = useCustomFonts();
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
 
   useEffect(() => {
     configureGoogleSignIn();
   }, []);
 
-  if (!loaded) return null;
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <StatusBar style="light" />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="(auth)/signin" />
-            <Stack.Screen name="(auth)/email-senha" />
-            <Stack.Screen name="(auth)/cadastro" />
-            <Stack.Screen name="goals/criar" />
-            <Stack.Screen name="goals/[id]" />
-            <Stack.Screen name="goals/editar" />
-            <Stack.Screen name="goals/convidar" />
-            <Stack.Screen name="goals/pix" />
-          </Stack>
-        </AuthProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                statusBarStyle: "light",
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="(auth)/signin"
+                options={{ headerShown: false }}
+              />
+            </Stack>
+          </AuthProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

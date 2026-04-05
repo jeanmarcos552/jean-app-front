@@ -1,12 +1,12 @@
 import React from "react";
 import { Platform, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { Layout } from "@components/ui/Layout";
 import { Button } from "@components/ui/Buttons";
-import { Text } from "@components/ui/Text";
-import { Flex } from "@components/ui/Flex";
-import { View } from "@components/ui/View";
 import { usePageSignIn } from "@/models/use-page-signin";
+import { Layout } from "@/components/ui/Layout";
+import Flex from "@/components/ui/Flex";
+import Text from "@/components/ui/Text";
+import View from "@/components/ui/View";
 
 export default function SignInScreen() {
   const { handleGoogleLogin, isLoading } = usePageSignIn();

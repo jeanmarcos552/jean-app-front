@@ -50,6 +50,7 @@ export const theme = {
   },
 };
 
-export type ThemeColorKey = keyof typeof theme.colors;
-export type ThemeBackgroundKey = keyof typeof theme.background;
-export type ThemeBorderKey = keyof typeof theme.border;
+export type ThemeType = typeof theme;
+export type ColorsType = keyof typeof theme.colors;
+export type BackgroundType = keyof typeof theme.background;
+export type FontsType = typeof theme.fonts;

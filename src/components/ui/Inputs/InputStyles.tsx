@@ -1,79 +1,88 @@
+import { theme } from "@/theme";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { theme } from "@theme";
-import { Text } from "../Text";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { Card } from "../Card";
+import Text from "../Text";
+import View from "../View";
 
-interface InputWrapperProps {
+type InputStylesProps = {
+  children?: React.ReactNode;
   label?: string;
   error?: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
+  icon?: React.JSX.Element;
+  style?: StyleProp<ViewStyle>;
+};
+
+function CreateIcon({
+  icon,
+  error,
+}: {
+  icon?: React.JSX.Element;
+  error?: string;
+}) {
+  if (React.isValidElement(icon)) {
+    return React.cloneElement(icon as React.JSX.Element, {
+      size: 12.5,
+      color: !!error ? theme.colors.danger : theme.colors.primary,
+    });
+  }
+
+  return null;
 }
 
-export function InputWrapper({ label, error, icon, children }: InputWrapperProps) {
+export const InputStyles = ({
+  children,
+  label,
+  error,
+  icon,
+  style,
+}: InputStylesProps) => {
   return (
-    <View style={styles.container}>
-      {label && (
-        <Text type="small" color="gray" style={styles.label}>
-          {label}
-        </Text>
-      )}
-      <View style={styles.inputRow}>
-        {icon && <View style={styles.icon}>{icon}</View>}
-        <View style={styles.flex}>{children}</View>
+    <View style={[styles.container]}>
+      <View style={style}>
+        {label ? (
+          <View variant="row" style={styles.center}>
+            {icon ? (
+              <Card.Icon variant={error ? "danger" : "black"} size="small">
+                <CreateIcon icon={icon!} error={error!} />
+              </Card.Icon>
+            ) : null}
+            <Text type="small" color={error ? "danger" : "gray"}>
+              {label}
+            </Text>
+          </View>
+        ) : null}
+
+        {children}
       </View>
-      {error && (
-        <Text type="small" color="danger" style={styles.error}>
-          {error}
-        </Text>
-      )}
+
+      {error ? (
+        <View variant="row" style={styles.center}>
+          <AntDesign name="warning" size={12} color={theme.colors.danger} />
+
+          <Text type="small" color="danger">
+            {error}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    gap: 6,
+    justifyContent: "flex-start",
   },
   label: {
-    marginLeft: 4,
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    position: "absolute",
-    left: 12,
-    zIndex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  error: {
-    marginLeft: 4,
-  },
-});
-
-export const inputBaseStyles = StyleSheet.create({
-  input: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: theme.border.gray,
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    color: theme.colors.white,
-    fontFamily: theme.fonts.body,
+    marginBottom: 6,
+    color: theme.colors.primary,
     fontSize: 14,
   },
-  focused: {
-    borderColor: theme.colors.secundary,
-  },
-  error: {
-    borderColor: theme.colors.danger,
-  },
-  withIcon: {
-    paddingLeft: 44,
+  center: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    paddingTop: 2,
   },
 });

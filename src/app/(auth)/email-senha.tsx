@@ -42,11 +42,11 @@ export default function EmailSenhaScreen() {
         },
         {
           key: "forgot",
-          component: (
-            <Link href="/(auth)/recuperar-senha" asChild>
-              <Text type="link">Esqueci minha senha</Text>
-            </Link>
-          ),
+          // component: (
+          //   <Link href="/(auth)/recuperar-senha" asChild>
+          //     <Text type="link">Esqueci minha senha</Text>
+          //   </Link>
+          // ),
         },
       ],
     },
@@ -63,18 +63,20 @@ export default function EmailSenhaScreen() {
           <View style={styles.field}>{item.component}</View>
         )}
         renderSectionHeader={() => null}
-      />
-
-      <Layout.Footer>
-        <Button
+      >
+         <Layout.Footer>
+        <Layout.Button
           variant="default"
           size="large"
           onPress={handleLogin}
           isLoading={isLoading}
         >
           Entrar
-        </Button>
+        </Layout.Button>
       </Layout.Footer>
+      </Layout.Formulario>
+
+     
     </Layout.Root>
   );
 }

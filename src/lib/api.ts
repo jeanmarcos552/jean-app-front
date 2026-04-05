@@ -56,6 +56,7 @@ interface ValidationError {
 
 // Extrai mensagem de erro da resposta
 export function getApiErrorMessage(error: any): string {
+  console.log(error)
   if (axios.isAxiosError(error) && error.response?.data) {
     const data = error.response.data;
 

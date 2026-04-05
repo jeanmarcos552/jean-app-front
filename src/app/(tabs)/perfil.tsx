@@ -2,11 +2,11 @@ import React from "react";
 import { Alert, StyleSheet } from "react-native";
 import { Layout } from "@components/ui/Layout";
 import { Card } from "@components/ui/Card";
-import { Text } from "@components/ui/Text";
-import { View } from "@components/ui/View";
 import { Button } from "@components/ui/Buttons";
 import { useAuth } from "@/contexts/authContexts";
 import { cpfMask } from "@/helper/Mask";
+import View from "@/components/ui/View";
+import Text from "@/components/ui/Text";
 
 export default function PerfilScreen() {
   const { user, logout } = useAuth();
@@ -20,7 +20,7 @@ export default function PerfilScreen() {
 
   return (
     <Layout.Root>
-      <Layout.Header title="Perfil" showBack={false} />
+      <Layout.Header title="Perfil"  />
 
       <Layout.Scroll>
         <Card.Root>
@@ -46,7 +46,7 @@ export default function PerfilScreen() {
           variant="outline"
           size="large"
           onPress={handleLogout}
-          color="#da5050"
+          color="danger"
         >
           Sair da conta
         </Button>

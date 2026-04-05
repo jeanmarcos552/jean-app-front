@@ -1,6 +1,15 @@
-export { InputText } from "./Text";
-export { InputDate } from "./Date";
-export { InputSelect } from "./Select";
-export { InputRadio } from "./Radio";
-export { InputSwitch } from "./Switch";
-export { InputTextArea } from "./TextArea";
+import InputDate from "./Date";
+import RadioGroup from "./Radio";
+import { Select } from "./Select";
+import { InputSwitch } from "./Switch";
+import InputText from "./Text";
+import { TextArea } from "./TextArea";
+
+export const Input = {
+   Text: InputText,
+   Checkbox: InputSwitch,
+   Radio: RadioGroup,
+   Select,
+   TextArea,
+   Date: InputDate,
+}
