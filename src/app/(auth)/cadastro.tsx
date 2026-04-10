@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Layout } from "@components/ui/Layout";
 import { Button } from "@components/ui/Buttons";
 import { InputText } from "@components/ui/Inputs";
-import { View } from "@components/ui/View";
+import View from "@components/ui/View";
 import { signUp } from "@/services/auth.service";
 import { useAuth } from "@/contexts/authContexts";
 import { useAuthStore } from "@/stores/auth";

@@ -1,6 +1,6 @@
 import { theme } from "@/theme";
 import React, { useState } from "react";
-import { Control, Controller, RegisterOptions } from "react-hook-form";
+import { Controller, RegisterOptions } from "react-hook-form";
 import {
    ActivityIndicator,
    KeyboardTypeOptions,
@@ -27,7 +27,7 @@ type Mask =
 
 type Props = TextInputProps & {
   name: string;
-  control: Control<any>;
+  control: any;
   rules?: RegisterOptions;
   mask?: Mask;
   placeholder?: string;

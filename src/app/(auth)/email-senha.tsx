@@ -3,9 +3,9 @@ import { StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { Layout } from "@components/ui/Layout";
 import { Button } from "@components/ui/Buttons";
-import { Text } from "@components/ui/Text";
+import Text from "@components/ui/Text";
 import { InputText } from "@components/ui/Inputs";
-import { View } from "@components/ui/View";
+import View from "@components/ui/View";
 import { usePageSignIn } from "@/models/use-page-signin";
 
 export default function EmailSenhaScreen() {

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Layout } from "@components/ui/Layout";
 import { Button } from "@components/ui/Buttons";
 import { InputText, InputDate, InputSelect, InputTextArea } from "@components/ui/Inputs";
-import { View } from "@components/ui/View";
+import View from "@components/ui/View";
 import { useGoalById, useUpdateGoal } from "@/queries/useGoals";
 import { getApiErrorMessage } from "@/lib/api";
 

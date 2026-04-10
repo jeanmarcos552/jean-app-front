@@ -5,7 +5,6 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "postinstall": "node ./scripts/prepare-skia.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -75,7 +74,7 @@
     "@tanstack/eslint-plugin-query": "^5.96.2",
     "@types/react": "~19.1.0",
     "babel-preset-expo": "^55.0.15",
-    "eslint": "^10.2.0",
+    "eslint": "^9.0.0",
     "eslint-config-expo": "^55.0.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "sharp": "^0.34.5",

@@ -23,11 +23,6 @@ export default function TabLayout() {
         <Label>Home</Label>
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="eventos/index">
-        <Icon sf="calendar" drawable="ic_menu_eventos" />
-        <Label>Eventos</Label>
-      </NativeTabs.Trigger>
-
       <NativeTabs.Trigger name="perfil">
         <Icon sf="person.fill" drawable="ic_menu_profile" />
         <Label>Perfil</Label>

@@ -2,13 +2,11 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "ignoreDeprecations": "6.0",
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@images/*": ["../assets/images/*"],
-      "@theme": ["./theme/index.ts"],
-      "@components/*": ["./components/*"]
+      "@/*": ["./src/*"],
+      "@images/*": ["./assets/images/*"],
+      "@theme": ["./src/theme/index.ts"],
+      "@components/*": ["./src/components/*"]
     }
   },
   "include": [

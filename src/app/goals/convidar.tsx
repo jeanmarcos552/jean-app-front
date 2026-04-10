@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Layout } from "@components/ui/Layout";
 import { Button } from "@components/ui/Buttons";
 import { InputText } from "@components/ui/Inputs";
-import { View } from "@components/ui/View";
+import View from "@components/ui/View";
 import { useInviteByEmail } from "@/queries/useGoals";
 import { getApiErrorMessage } from "@/lib/api";
 

@@ -3,8 +3,8 @@ import { Alert, StyleSheet, Clipboard } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Layout } from "@components/ui/Layout";
 import { Card } from "@components/ui/Card";
-import { Text } from "@components/ui/Text";
-import { View } from "@components/ui/View";
+import Text from "@components/ui/Text";
+import View from "@components/ui/View";
 import { Button } from "@components/ui/Buttons";
 import { useAuth } from "@/contexts/authContexts";
 import {
@@ -119,7 +119,7 @@ export default function GoalDetailScreen() {
                   </Text>
                 )}
               </View>
-              <Card.Badge color={goal.status === "active" ? "success" : "gray"}>
+              <Card.Badge variant={goal.status === "active" ? "success" : "gray"}>
                 {goal.status === "active"
                   ? "Ativa"
                   : goal.status === "completed"
@@ -165,7 +165,7 @@ export default function GoalDetailScreen() {
               {goal.categories && goal.categories.length > 0 && (
                 <View variant="row" style={{ flexWrap: "wrap", gap: 6, marginTop: 8 }}>
                   {goal.categories.map((cat) => (
-                    <Card.Badge key={cat} color="secundary">
+                    <Card.Badge key={cat} variant="secundary">
                       {cat}
                     </Card.Badge>
                   ))}
@@ -203,7 +203,7 @@ export default function GoalDetailScreen() {
                     <Button
                       variant="link"
                       size="link"
-                      color="#da5050"
+                      color="danger"
                       onPress={() => handleRemoveParticipant(p)}
                     >
                       Remover
@@ -251,7 +251,7 @@ export default function GoalDetailScreen() {
                         </Text>
                       )}
                     </View>
-                    <Card.Badge color={st?.color || "gray"}>
+                    <Card.Badge variant={st?.color || "gray"}>
                       {st?.label || c.status}
                     </Card.Badge>
                     {c.status === "pending" && c.user_id === user?.id && (
@@ -291,7 +291,7 @@ export default function GoalDetailScreen() {
             <Button
               variant="outline"
               size="large"
-              color="#da5050"
+              color="danger"
               onPress={handleDelete}
               isLoading={deleteGoal.isPending}
             >

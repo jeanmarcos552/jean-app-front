@@ -5,7 +5,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import { format as formatDateFns } from "date-fns";
 import React from "react";
-import { Control, Controller, RegisterOptions } from "react-hook-form";
+import { Controller, RegisterOptions } from "react-hook-form";
 import {
   Platform,
   Pressable,
@@ -19,7 +19,7 @@ import { InputStyles } from "./InputStyles";
 
 type Props = {
   name: string;
-  control: Control<any>;
+  control: any;
   rules?: RegisterOptions;
   placeholder?: string;
   label?: string;
