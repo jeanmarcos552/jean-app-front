@@ -5,6 +5,7 @@ import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import Flex from "../Flex";
 import Text from "../Text";
+import { Card } from "../Card";
 
 type HeaderProps = {
   children?: React.ReactNode;
@@ -18,16 +19,18 @@ export function Header({ title, subtitle, children, callback }: HeaderProps) {
   return (
     <View style={styles.titulo}>
       <View style={styles.header}>
-        <HeaderBackButton
-          onPress={() => {
-            if (callback) {
-              callback();
-            } else {
-              navigation.goBack();
-            }
-          }}
-          tintColor={theme.colors.white}
-        />
+        <Card.Icon>
+          <HeaderBackButton
+            onPress={() => {
+              if (callback) {
+                callback();
+              } else {
+                navigation.goBack();
+              }
+            }}
+            tintColor={theme.colors.white}
+          />
+        </Card.Icon>
         <Flex flex={1}>
           {title && <Text type="titulo">{title}</Text>}
           {subtitle &&
@@ -60,5 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    gap: 4,
   },
 });

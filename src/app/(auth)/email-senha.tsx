@@ -13,41 +13,24 @@ export default function EmailSenhaScreen() {
 
   const sections = [
     {
-      key: "form",
       data: [
-        {
-          key: "login",
-          component: (
-            <InputText
-              name="login"
-              control={form.control}
-              label="E-mail ou CPF"
-              placeholder="Digite seu e-mail ou CPF"
-              mask="emailOrCpf"
-              keyboardType="email-address"
-            />
-          ),
-        },
-        {
-          key: "senha",
-          component: (
-            <InputText
-              name="senha"
-              control={form.control}
-              label="Senha"
-              placeholder="Digite sua senha"
-              secureTextEntry
-            />
-          ),
-        },
-        {
-          key: "forgot",
-          // component: (
-          //   <Link href="/(auth)/recuperar-senha" asChild>
-          //     <Text type="link">Esqueci minha senha</Text>
-          //   </Link>
-          // ),
-        },
+        <View key="form">
+          <InputText
+            name="login"
+            control={form.control}
+            label="E-mail ou CPF"
+            placeholder="Digite seu e-mail ou CPF"
+            mask="emailOrCpf"
+            keyboardType="email-address"
+          />
+          <InputText
+            name="senha"
+            control={form.control}
+            label="Senha"
+            placeholder="Digite sua senha"
+            secureTextEntry
+          />
+        </View>,
       ],
     },
   ];
@@ -59,12 +42,11 @@ export default function EmailSenhaScreen() {
       <Layout.Formulario
         sections={sections}
         keyExtractor={(item: any) => item.key}
-        renderItem={({ item }: any) => (
-          <View style={styles.field}>{item.component}</View>
-        )}
+        renderItem={({ item }: any) => <View style={styles.field}>{item}</View>}
         renderSectionHeader={() => null}
-      >
-         <Layout.Footer>
+      />
+
+      <Layout.Footer>
         <Layout.Button
           variant="default"
           size="large"
@@ -74,9 +56,6 @@ export default function EmailSenhaScreen() {
           Entrar
         </Layout.Button>
       </Layout.Footer>
-      </Layout.Formulario>
-
-     
     </Layout.Root>
   );
 }
