@@ -1,115 +1,80 @@
-import { HeaderBackButton } from "@react-navigation/elements";
-import { useNavigation } from "@react-navigation/native";
-import { theme } from "@theme";
+import { theme } from "@/theme";
 import React, { useMemo } from "react";
-import {
-  Platform,
-  RefreshControl,
-  SectionList,
-  SectionListProps,
-  StyleSheet,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Text from "../Text";
-import View from "../View";
+import type { SectionListProps } from "react-native";
+import { Platform, RefreshControl, SectionList, StyleSheet } from "react-native";
+import { Separator } from "./Separator";
 
-export type RootSectionListProps = SectionListProps<any> & {
-  children?: React.ReactNode;
-  StickyHeaderComponent?: React.ReactNode;
+export type RootSectionListProps<T> = SectionListProps<T> & {
+  isRefetching?: boolean;
   refetch?: () => void;
-  loading?: boolean;
-  ListFooterComponent?: React.ReactNode;
 };
 
-export function Header({ title, children }: any) {
-  const navigation = useNavigation();
+const noop = () => {};
 
-  return (
-    <View style={stylesHeader.titulo}>
-      <View variant="row">
-        <HeaderBackButton
-          onPress={() => navigation.goBack()}
-          tintColor={theme.colors.white}
-        />
-        <Text type="titulo">{title}</Text>
-      </View>
-      <>
-        {children && (
-          <View style={stylesHeader.botoes} variant="row">
-            {children}
-          </View>
-        )}
-      </>
-    </View>
+type SectionListComponent = <T>(
+  props: RootSectionListProps<T> & { ref?: React.Ref<SectionList<T>> },
+) => React.ReactElement | null;
+
+const RootSectionListInner = <T,>(
+  props: RootSectionListProps<T>,
+  ref: React.Ref<SectionList<T>>,
+) => {
+  const {
+    contentContainerStyle,
+    initialNumToRender = 5,
+    showsVerticalScrollIndicator = false,
+    isRefetching = false,
+    refetch = noop,
+    ...rest
+  } = props;
+
+  const mergedContentStyle = useMemo(
+    () => [styles.contentContainer, contentContainerStyle],
+    [contentContainerStyle],
   );
-}
-
-const stylesHeader = StyleSheet.create({
-  titulo: {
-    marginVertical: 22,
-    gap: 18,
-  },
-  botoes: {
-    justifyContent: "center",
-    gap: 18,
-  },
-});
-
-export const RootSectionList = ({
-  children,
-  StickyHeaderComponent,
-  refetch,
-  loading = false,
-  ListFooterComponent: ListFooterComponentApp,
-  ...rest
-}: RootSectionListProps) => {
-  const { bottom } = useSafeAreaInsets();
 
   const refreshControl = useMemo(
     () => (
       <RefreshControl
         tintColor={theme.colors.primary}
-        refreshing={loading}
+        refreshing={isRefetching}
         onRefresh={refetch}
       />
     ),
-    [loading, refetch],
+    [isRefetching, refetch],
   );
 
-  const listFooter = useMemo(
-    () => (
-      <View style={{ marginBottom: bottom + 100 }}>
-        {ListFooterComponentApp && ListFooterComponentApp}
-      </View>
-    ),
-    [bottom, ListFooterComponentApp],
-  );
+  const ListFooterComponent = useMemo(() => {
+    return <Separator size={100} />;
+  }, []);
 
   return (
     <SectionList
-      contentContainerStyle={styles.contentContainer}
+      ref={ref}
+      contentContainerStyle={mergedContentStyle}
       keyExtractor={(_, index) => index.toString()}
       stickySectionHeadersEnabled
       keyboardShouldPersistTaps="handled"
       showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      initialNumToRender={5}
+      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      initialNumToRender={initialNumToRender}
       maxToRenderPerBatch={10}
       windowSize={5}
       removeClippedSubviews={Platform.OS !== "ios"}
       refreshControl={refreshControl}
-      ListFooterComponent={listFooter}
+      ListFooterComponent={ListFooterComponent}
       {...rest}
     />
   );
 };
 
+export const RootSectionList = React.forwardRef(
+  RootSectionListInner,
+) as SectionListComponent;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   contentContainer: {
     flexGrow: 1,
-    gap: 8,
+    gap: 6,
   },
 });

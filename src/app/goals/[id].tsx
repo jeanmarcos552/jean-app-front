@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Alert, StyleSheet, Clipboard } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Layout } from "@components/ui/Layout";
 import { Card } from "@components/ui/Card";
@@ -18,7 +18,10 @@ import { money } from "@/helper/Mask";
 import { formatDate } from "@/helper/date-format";
 import { Contribution, GoalParticipant } from "@/types/goal";
 
-const statusLabels: Record<string, { label: string; color: "success" | "warning" | "danger" | "gray" }> = {
+const statusLabels: Record<
+  string,
+  { label: string; color: "success" | "warning" | "danger" | "gray" }
+> = {
   pending: { label: "Pendente", color: "warning" },
   paid: { label: "Pago", color: "success" },
   late: { label: "Atrasado", color: "danger" },
@@ -38,7 +41,9 @@ export default function GoalDetailScreen() {
   const isMoney = goal?.value_type === "money";
 
   const { data: myContributions } = useMyContributions(isMoney ? id : "");
-  const { data: allContributions } = useContributions(isOwner && isMoney ? id : "");
+  const { data: allContributions } = useContributions(
+    isOwner && isMoney ? id : "",
+  );
 
   const contributions = isOwner ? allContributions : myContributions;
 
@@ -90,7 +95,7 @@ export default function GoalDetailScreen() {
   }
 
   const activeParticipants = goal.goal_participants?.filter(
-    (p) => p.status === "active"
+    (p) => p.status === "active",
   );
 
   const sections = [
@@ -105,206 +110,211 @@ export default function GoalDetailScreen() {
     },
   ];
 
-  const renderItem = useCallback(
-    ({ item }: { item: any }) => {
-      if (item.key === "info") {
-        return (
-          <Card.Root>
-            <Card.Header>
-              <View style={{ flex: 1, gap: 6 }}>
-                <Card.Title>{goal.name}</Card.Title>
-                {goal.description && (
-                  <Text type="paragrafo" color="gray">
-                    {goal.description}
-                  </Text>
-                )}
-              </View>
-              <Card.Badge variant={goal.status === "active" ? "success" : "gray"}>
-                {goal.status === "active"
-                  ? "Ativa"
-                  : goal.status === "completed"
+  const renderItem = ({ item }: { item: any }) => {
+    if (item.key === "info") {
+      return (
+        <Card.Root>
+          <Card.Header>
+            <View style={{ flex: 1, gap: 6 }}>
+              <Card.Title>{goal.name}</Card.Title>
+              {goal.description && (
+                <Text type="paragrafo" color="gray">
+                  {goal.description}
+                </Text>
+              )}
+            </View>
+            <Card.Badge variant={goal.status === "active" ? "success" : "gray"}>
+              {goal.status === "active"
+                ? "Ativa"
+                : goal.status === "completed"
                   ? "Concluida"
                   : "Cancelada"}
-              </Card.Badge>
-            </Card.Header>
-            <Card.Content>
-              <View variant="row" style={styles.infoRow}>
-                <View style={{ flex: 1 }}>
-                  <Text type="small" color="gray">
-                    Tipo
-                  </Text>
-                  <Text type="paragrafo">
-                    {isMoney ? "Financeira" : "Progresso"}
-                  </Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text type="small" color="gray">
-                    Valor
-                  </Text>
-                  <Text type="paragrafo">
-                    {isMoney
-                      ? money(parseFloat(goal.total_value), true)
-                      : `${goal.total_value}%`}
-                  </Text>
-                </View>
+            </Card.Badge>
+          </Card.Header>
+          <Card.Content>
+            <View variant="row" style={styles.infoRow}>
+              <View style={{ flex: 1 }}>
+                <Text type="small" color="gray">
+                  Tipo
+                </Text>
+                <Text type="paragrafo">
+                  {isMoney ? "Financeira" : "Progresso"}
+                </Text>
               </View>
-              <View variant="row" style={styles.infoRow}>
-                <View style={{ flex: 1 }}>
-                  <Text type="small" color="gray">
-                    Prazo
-                  </Text>
-                  <Text type="paragrafo">{formatDate(goal.end_date)}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text type="small" color="gray">
-                    Frequencia
-                  </Text>
-                  <Text type="paragrafo">{goal.reminder_frequency}</Text>
-                </View>
+              <View style={{ flex: 1 }}>
+                <Text type="small" color="gray">
+                  Valor
+                </Text>
+                <Text type="paragrafo">
+                  {isMoney
+                    ? money(parseFloat(goal.total_value), true)
+                    : `${goal.total_value}%`}
+                </Text>
               </View>
-              {goal.categories && goal.categories.length > 0 && (
-                <View variant="row" style={{ flexWrap: "wrap", gap: 6, marginTop: 8 }}>
-                  {goal.categories.map((cat) => (
-                    <Card.Badge key={cat} variant="secundary">
-                      {cat}
-                    </Card.Badge>
-                  ))}
-                </View>
-              )}
-            </Card.Content>
-          </Card.Root>
-        );
-      }
+            </View>
+            <View variant="row" style={styles.infoRow}>
+              <View style={{ flex: 1 }}>
+                <Text type="small" color="gray">
+                  Prazo
+                </Text>
+                <Text type="paragrafo">{formatDate(goal.end_date)}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text type="small" color="gray">
+                  Frequencia
+                </Text>
+                <Text type="paragrafo">{goal.reminder_frequency}</Text>
+              </View>
+            </View>
+            {goal.categories && goal.categories.length > 0 && (
+              <View
+                variant="row"
+                style={{ flexWrap: "wrap", gap: 6, marginTop: 8 }}
+              >
+                {goal.categories.map((cat) => (
+                  <Card.Badge key={cat} variant="secundary">
+                    {cat}
+                  </Card.Badge>
+                ))}
+              </View>
+            )}
+          </Card.Content>
+        </Card.Root>
+      );
+    }
 
-      if (item.key === "participants") {
-        return (
-          <Card.Root>
-            <Card.Header>
-              <Card.Title>Participantes ({activeParticipants?.length || 0})</Card.Title>
-            </Card.Header>
-            <Card.Content>
-              {activeParticipants?.map((p) => (
-                <View key={p.id} variant="row" style={styles.participantRow}>
+    if (item.key === "participants") {
+      return (
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>
+              Participantes ({activeParticipants?.length || 0})
+            </Card.Title>
+          </Card.Header>
+          <Card.Content>
+            {activeParticipants?.map((p) => (
+              <View key={p.id} variant="row" style={styles.participantRow}>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Text type="paragrafo">
+                    {p.user.name}
+                    {p.role === "owner" ? " (criador)" : ""}
+                  </Text>
+                  <Text type="small" color="gray">
+                    {p.user.email}
+                  </Text>
+                  {p.late_count > 0 && (
+                    <Text type="small" color="warning">
+                      {p.late_count} atraso(s)
+                    </Text>
+                  )}
+                </View>
+                {isOwner && p.role !== "owner" && (
+                  <Button
+                    variant="link"
+                    size="link"
+                    color="danger"
+                    onPress={() => handleRemoveParticipant(p)}
+                  >
+                    Remover
+                  </Button>
+                )}
+              </View>
+            ))}
+
+            {isOwner && (
+              <Button
+                variant="outline"
+                size="small"
+                onPress={() => router.push(`/goals/convidar?goalId=${id}`)}
+                style={{ marginTop: 12 }}
+              >
+                Convidar participante
+              </Button>
+            )}
+          </Card.Content>
+        </Card.Root>
+      );
+    }
+
+    if (item.key === "contributions") {
+      return (
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Parcelas</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            {contributions?.map((c: Contribution) => {
+              const st = statusLabels[c.status];
+              return (
+                <View key={c.id} variant="row" style={styles.contributionRow}>
                   <View style={{ flex: 1, gap: 2 }}>
                     <Text type="paragrafo">
-                      {p.user.name}
-                      {p.role === "owner" ? " (criador)" : ""}
+                      Parcela {c.installment_no} -{" "}
+                      {money(parseFloat(c.amount), true)}
                     </Text>
                     <Text type="small" color="gray">
-                      {p.user.email}
+                      Vencimento: {formatDate(c.due_date)}
                     </Text>
-                    {p.late_count > 0 && (
-                      <Text type="small" color="warning">
-                        {p.late_count} atraso(s)
+                    {c.user && (
+                      <Text type="small" color="gray">
+                        {c.user.name}
                       </Text>
                     )}
                   </View>
-                  {isOwner && p.role !== "owner" && (
+                  <Card.Badge variant={st?.color || "gray"}>
+                    {st?.label || c.status}
+                  </Card.Badge>
+                  {c.status === "pending" && c.user_id === user?.id && (
                     <Button
-                      variant="link"
-                      size="link"
-                      color="danger"
-                      onPress={() => handleRemoveParticipant(p)}
+                      variant="default"
+                      size="small"
+                      onPress={() =>
+                        router.push(
+                          `/goals/pix?goalId=${id}&contributionId=${c.id}`,
+                        )
+                      }
                     >
-                      Remover
+                      Pagar
                     </Button>
                   )}
                 </View>
-              ))}
+              );
+            })}
+            {(!contributions || contributions.length === 0) && (
+              <Text type="subtitulo" color="gray">
+                Nenhuma parcela encontrada.
+              </Text>
+            )}
+          </Card.Content>
+        </Card.Root>
+      );
+    }
 
-              {isOwner && (
-                <Button
-                  variant="outline"
-                  size="small"
-                  onPress={() => router.push(`/goals/convidar?goalId=${id}`)}
-                  style={{ marginTop: 12 }}
-                >
-                  Convidar participante
-                </Button>
-              )}
-            </Card.Content>
-          </Card.Root>
-        );
-      }
+    if (item.key === "actions") {
+      return (
+        <View style={styles.actions}>
+          <Button
+            variant="outline"
+            size="large"
+            onPress={() => router.push(`/goals/editar?id=${id}`)}
+          >
+            Editar Meta
+          </Button>
+          <Button
+            variant="outline"
+            size="large"
+            color="danger"
+            onPress={handleDelete}
+            isLoading={deleteGoal.isPending}
+          >
+            Cancelar Meta
+          </Button>
+        </View>
+      );
+    }
 
-      if (item.key === "contributions") {
-        return (
-          <Card.Root>
-            <Card.Header>
-              <Card.Title>Parcelas</Card.Title>
-            </Card.Header>
-            <Card.Content>
-              {contributions?.map((c: Contribution) => {
-                const st = statusLabels[c.status];
-                return (
-                  <View key={c.id} variant="row" style={styles.contributionRow}>
-                    <View style={{ flex: 1, gap: 2 }}>
-                      <Text type="paragrafo">
-                        Parcela {c.installment_no} - {money(parseFloat(c.amount), true)}
-                      </Text>
-                      <Text type="small" color="gray">
-                        Vencimento: {formatDate(c.due_date)}
-                      </Text>
-                      {c.user && (
-                        <Text type="small" color="gray">
-                          {c.user.name}
-                        </Text>
-                      )}
-                    </View>
-                    <Card.Badge variant={st?.color || "gray"}>
-                      {st?.label || c.status}
-                    </Card.Badge>
-                    {c.status === "pending" && c.user_id === user?.id && (
-                      <Button
-                        variant="default"
-                        size="small"
-                        onPress={() =>
-                          router.push(`/goals/pix?goalId=${id}&contributionId=${c.id}`)
-                        }
-                      >
-                        Pagar
-                      </Button>
-                    )}
-                  </View>
-                );
-              })}
-              {(!contributions || contributions.length === 0) && (
-                <Text type="subtitulo" color="gray">
-                  Nenhuma parcela encontrada.
-                </Text>
-              )}
-            </Card.Content>
-          </Card.Root>
-        );
-      }
-
-      if (item.key === "actions") {
-        return (
-          <View style={styles.actions}>
-            <Button
-              variant="outline"
-              size="large"
-              onPress={() => router.push(`/goals/editar?id=${id}`)}
-            >
-              Editar Meta
-            </Button>
-            <Button
-              variant="outline"
-              size="large"
-              color="danger"
-              onPress={handleDelete}
-              isLoading={deleteGoal.isPending}
-            >
-              Cancelar Meta
-            </Button>
-          </View>
-        );
-      }
-
-      return null;
-    },
-    [goal, contributions, isOwner, user]
-  );
+    return null;
+  };
 
   return (
     <Layout.Root>

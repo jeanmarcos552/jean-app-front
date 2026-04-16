@@ -30,8 +30,10 @@ export interface Goal {
   value_type: ValueType;
   total_value: string;
   reminder_frequency: ReminderFrequency;
-  status: GoalStatus;
+  status?: GoalStatus;
   categories: string[];
+  current_value?: string | number;
+  progress_percentage?: string | number;
   created_at: string;
   updated_at: string;
   owner?: {

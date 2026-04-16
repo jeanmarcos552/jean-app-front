@@ -112,8 +112,8 @@ export default function HomeScreen() {
         sections={sections}
         renderItem={renderItem}
         renderSectionHeader={() => null}
-        refreshing={isLoading}
-        onRefresh={refetch}
+        isRefetching={isLoading}
+        refetch={refetch}
       />
     </Layout.Root>
   );
